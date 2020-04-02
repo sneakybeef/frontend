@@ -11,7 +11,7 @@ class Tasks extends Component {
   
   async componentDidMount ()
   {
-    const {data:tasks} = await Axios.get("http://localhost:4000/tasks");
+    const {data:tasks} = await Axios.get("http://188.68.54.115:4000/tasks");
     this.setState({tasks});
     console.log(tasks);
   }

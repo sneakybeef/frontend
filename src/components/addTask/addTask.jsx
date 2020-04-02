@@ -33,7 +33,7 @@ class AddTask extends Form {
     };
     console.log(object);
 
-    fetch("http://localhost:4000/newTask", {
+    fetch("http://188.68.54.115:4000/newTask", {
       /* global fetch:false */
       method: "POST",
       body: JSON.stringify(object),

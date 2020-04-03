@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link ,useHistory} from "react-router-dom";
+import { Link } from "react-router-dom";
 import data from "../../data/data.json";
 import Axios from "axios";
 
@@ -13,7 +13,6 @@ class Tasks extends Component {
   {
     const {data:tasks} = await Axios.get("http://188.68.54.115:4000/tasks");
     this.setState({tasks});
-    console.log(tasks);
   }
 
   handleChecked = task => {
@@ -23,12 +22,10 @@ class Tasks extends Component {
     tasks[index].done = !this.state.tasks[index].done;
     this.setState({ tasks });
   };
-  
-  routeChange=()=> {
-    
-    const history = useHistory();
-    history.push("tasks");
+  handleDelete= async (ID)=>{
+   await Axios.delete(`http://188.68.54.115:4000/deleteTask?ID=${ID}`); 
   }
+  
 
   render() {
     return (
@@ -38,7 +35,7 @@ class Tasks extends Component {
         </Link>
         <table className="table">
           <thead>
-            <tr>
+            <tr key="wtf">
               <th>Done</th>
               <th>Name</th>
               <th>Description</th>
@@ -55,7 +52,7 @@ class Tasks extends Component {
                 <td>{task.name}</td>
                 <td>{task.description}</td>
                 <td>
-                  <button  onClick={this.routeChange} className="btn btn-primary">Delete</button>
+                  <button  onClick={()=>this.handleDelete(task.ID)} className="btn btn-primary">Delete</button>
                 </td>
               </tr>
             ))}

@@ -1,8 +1,10 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "../form/form";
+
+
 import { tasks } from "../../data/data.json";
-const fs = require("fs");
+
 
 class AddTask extends Form {
   state = {
@@ -22,23 +24,26 @@ class AddTask extends Form {
       .required()
       .label("Wichtigkeit")
   };
+  
+  redirect = () => {
+    this.props.history.push(`/tasks`)
+  }
 
   doSubmit = () => {
     const { name, description, urgency } = this.state.data;
-    console.log(name, description, urgency);
     const object = {
       name,
       description,
       urgency
     };
-    console.log(object);
-
+   
     fetch("http://188.68.54.115:4000/newTask", {
       /* global fetch:false */
       method: "POST",
       body: JSON.stringify(object),
       headers: { "Content-Type": "application/json" }
     });
+    this.redirect();
   };
 
   render() {

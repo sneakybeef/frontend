@@ -17,7 +17,7 @@ class Form extends Component {
     if (!result.error) return null;
 
     const errors = {};
-    result.error.details.map(({ message, path }) => {
+    result.error.details.forEach(({ message, path }) => {
       errors[path] = message;
     });
     return errors;
@@ -64,7 +64,7 @@ class Form extends Component {
   }
   renderButton(name) {
     return (
-      <button className="btn btn-primary" disabled={this.validate()}>
+      <button  disabled={this.validate()}>
         {name}
       </button>
     );

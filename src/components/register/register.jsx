@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React  from "react";
 import Form from "../form/form";
 import Joi from "joi-browser";
 class Register extends Form {

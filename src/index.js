@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Route, HashRouter } from "react-router-dom";
+import { Route,BrowserRouter as  Router  } from "react-router-dom";
 import Start from "./components/apps/start";
 import Login from "./components/apps/login";
 import Checklist from "./components/apps/checklist";
@@ -11,7 +11,7 @@ import Register from "./components/register/register";
 import Tasks from "./components/apps/tasks";
 import AddTask from "./components/addTask/addTask";
 const routing = (
-  <HashRouter basename="/">
+  <Router basename="/">
     <Route exact path="/" component={Start} />
     <Route exact path="/login" component={Login} />
     <Route exact path="/tasks" component={Tasks} />
@@ -19,7 +19,7 @@ const routing = (
     <Route exact path="/checklist" component={Checklist} />
     <Route exact path="/form" component={Loginform} />
     <Route exact path="/register" component={Register} />
-  </HashRouter>
+  </Router>
 );
 
 ReactDOM.render(routing, document.getElementById("root"));

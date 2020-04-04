@@ -24,7 +24,6 @@ class Tasks extends Component {
 			url: `${env.BACKEND}/editTask`,
 			data: { task: tasks[index] }
 		});
-
 		this.setState({ tasks });
 	};
 
@@ -36,8 +35,12 @@ class Tasks extends Component {
 		this.handleChange(checkedTasks[index]);
 	};
 
-	handleDelete = async (ID) => {
-		await Axios.delete(`${env.BACKEND}/deleteTask?ID=${ID}`);
+	handleDelete = async (task) => {
+		await Axios.delete(`${env.BACKEND}/deleteTask?ID=${task.ID}`);
+		let checkedTasks = this.state.tasks;
+		const index = this.state.tasks.indexOf(task);
+		delete checkedTasks[index];
+		this.handleChange(checkedTasks[index]);
 	};
 
 	render() {
@@ -65,7 +68,7 @@ class Tasks extends Component {
 								<td>{task.name}</td>
 								<td>{task.description}</td>
 								<td>
-									<button onClick={() => this.handleDelete(task.ID)} className="btn btn-primary">
+									<button onClick={() => this.handleDelete(task)} className="btn btn-primary">
 										Delete
 									</button>
 								</td>

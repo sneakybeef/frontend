@@ -12,6 +12,15 @@ class Tasks extends Component {
 		const { data: tasks } = await Axios.get(`${env.BACKEND}/tasks`);
 		this.setState({ tasks });
 	}
+	async componentWillUpdate() {
+		const { update } = this.props.location;
+		console.log(update);
+		if (update) {
+			const { data: tasks } = await Axios.get(`${env.BACKEND}/tasks`);
+			this.setState({ tasks });
+			this.props.location.update = false;
+		}
+	}
 
 	handleChange = async (task) => {
 		let tasks = this.state.tasks;

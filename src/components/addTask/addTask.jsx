@@ -6,6 +6,7 @@ import { tasks } from '../../data/data.json';
 
 class AddTask extends Form {
 	state = {
+		update: false,
 		tasks,
 		data: { name: '', description: '', urgency: 0 },
 		errors: {}
@@ -18,7 +19,7 @@ class AddTask extends Form {
 	};
 
 	redirect = () => {
-		this.props.history.push(`/tasks`);
+		this.props.history.push({ pathname: `/tasks`, update: true });
 	};
 
 	doSubmit = () => {

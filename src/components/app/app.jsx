@@ -1,5 +1,7 @@
 import React from 'react';
-import Axios from 'axios';
+import * as Axios from 'axios';
+import Cookies from 'universal-cookie';
+
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 import Tasks from '../apps/tasks/tasks';
@@ -27,13 +29,25 @@ class App extends React.Component {
 	};
 
 	handleLogin = async (userName, password) => {
-		await Axios({
+		const response = await Axios({
 			method: 'post',
 			url: `${env.BACKEND}/user/login`,
-			data: { userName, password }
-		}).then(({ data: { token } }) => {
-			this.setState({ token, userName, password });
-		});
+			data: { userName, password },
+			withCredentials: true
+		}).then(
+			(resp) => {
+				console.log('success', resp);
+				const { data: { token } } = resp;
+				this.setState({ token, userName, password });
+
+				console.log(document.cookie);
+				return true;
+			},
+			(error) => {
+				return false;
+			}
+		);
+		return response;
 	};
 
 	handleRefresh() {

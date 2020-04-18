@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import env from '../../../env.json';
 import Axios from 'axios';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Tasks extends Component {
 	state = {
 		token: this.props.token,
 		tasks: []
 	};
-
+	componentWillReceiveProps() {
+		console.log('props');
+	}
 	async componentDidMount() {
 		if (!this.props.token) {
 			//this.props.history.push({ pathname: '/login' });
@@ -54,23 +59,21 @@ class Tasks extends Component {
 	};
 
 	render() {
-		const { token } = this.props;
-
 		Axios({
 			method: 'get',
 			url: `${env.BACKEND}/tasks`,
-			headers: {
-				Authorization: 'Bearer ' + token
-			}
-		})
-			.then(({ data: tasks }) => {
+			withCredentials: true
+		}).then(
+			({ data: tasks }) => {
+				console.log('success');
+
 				this.setState({ tasks });
-			})
-			.catch((err) => {
-				if (err.message === 'Request failed with status code 401') {
-					this.props.history.push({ pathname: '/login' });
-				}
-			});
+			},
+			(error) => {
+				console.log(error);
+				this.props.history.push({ pathname: '/login' });
+			}
+		);
 
 		return (
 			<div>

@@ -14,11 +14,15 @@ class Login extends Form {
 		const { onLogin } = this.props;
 		const { history } = this.props;
 		const { userName, password } = this.state.data;
-		onLogin(userName, password).then(() => {
-			history.push({ pathname: '/tasks' });
+		onLogin(userName, password).then((success) => {
+			if (success) {
+				history.push({ pathname: '/tasks' });
+			}
 		});
 	};
 	render() {
+		console.log(document.cookie);
+
 		return (
 			<div className="container-sm">
 				<form onSubmit={this.handleSubmit}>

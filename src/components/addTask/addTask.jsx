@@ -3,6 +3,7 @@ import Joi from 'joi-browser';
 import Form from '../form/form';
 import env from '../../env.json';
 import { tasks } from '../../data/data.json';
+import Axios from 'axios';
 
 class AddTask extends Form {
 	state = {
@@ -18,25 +19,30 @@ class AddTask extends Form {
 		urgency: Joi.string().required().label('Wichtigkeit')
 	};
 
-	redirect = () => {
-		this.props.history.push({ pathname: `/tasks`, update: true });
-	};
-
 	doSubmit = () => {
 		const { name, description, urgency } = this.state.data;
+
 		const object = {
 			name,
 			description,
 			urgency
 		};
+		Axios({
+			method: 'post',
+			data: object,
+			url: `${env.BACKEND}/newTask`,
+			withCredentials: true
+		}).then(
+			() => {
+				console.log('success');
 
-		fetch(`${env.BACKEND}/newTask`, {
-			/* global fetch:false */
-			method: 'POST',
-			body: JSON.stringify(object),
-			headers: { 'Content-Type': 'application/json' }
-		});
-		this.redirect();
+				this.props.history.push({ pathname: '/tasks' });
+			},
+			(error) => {
+				console.log(error);
+				this.props.history.push({ pathname: '/login' });
+			}
+		);
 	};
 
 	render() {

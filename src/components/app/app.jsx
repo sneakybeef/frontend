@@ -36,11 +36,9 @@ class App extends React.Component {
 			withCredentials: true
 		}).then(
 			(resp) => {
-				console.log('success', resp);
 				const { data: { token } } = resp;
 				this.setState({ token, userName, password });
 
-				console.log(document.cookie);
 				return true;
 			},
 			(error) => {

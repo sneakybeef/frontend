@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import env from '../../../env.json';
 import Axios from 'axios';
 import Cookies from 'universal-cookie';
+import { loadPartialConfig } from '@babel/core';
 
 const cookies = new Cookies();
 
@@ -11,9 +12,7 @@ class Tasks extends Component {
 		token: this.props.token,
 		tasks: []
 	};
-	componentWillReceiveProps() {
-		console.log('props');
-	}
+
 	async componentDidMount() {
 		if (!this.props.token) {
 			//this.props.history.push({ pathname: '/login' });
@@ -51,11 +50,24 @@ class Tasks extends Component {
 	};
 
 	handleDelete = async (task) => {
-		await Axios.delete(`${env.BACKEND}/deleteTask?ID=${task.ID}`);
-		let checkedTasks = this.state.tasks;
-		const index = this.state.tasks.indexOf(task);
-		delete checkedTasks[index];
-		this.handleChange(checkedTasks[index]);
+		Axios({
+			method: 'delete',
+			url: `${env.BACKEND}/deleteTask`,
+			data: { id: task.id }
+		}).then(
+			(response) => {
+				const newTasks = [ ...this.state.tasks ];
+				const task = this.state.tasks.find((task) => task.id == response.data.id);
+
+				newTasks.splice(newTasks[newTasks.indexOf(task)], 1);
+
+				this.setState({ tasks: newTasks });
+			},
+			(error) => {
+				console.log(error);
+				this.props.history.push({ pathname: '/login' });
+			}
+		);
 	};
 
 	render() {
@@ -90,11 +102,9 @@ class Tasks extends Component {
 					</thead>
 					<tbody>
 						{this.state.tasks.map((task) => (
-							<tr key={task.ID}>
+							<tr key={task.id}>
 								<td>
-									<button onClick={() => this.handleChecked(task)}>
-										{this.renderCheckbox(task.done)}
-									</button>
+									<button>{this.renderCheckbox(task.done)}</button>
 								</td>
 								<td>{task.name}</td>
 								<td>{task.description}</td>

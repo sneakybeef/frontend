@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from '../form/form';
 import Joi from 'joi-browser';
+import Header from './../header/header';
 class Login extends Form {
 	state = {
 		data: { userName: '', password: '' },
@@ -21,10 +22,18 @@ class Login extends Form {
 		});
 	};
 	render() {
-		console.log(document.cookie);
+		const links = [
+			{ name: 'Home', url: '/' },
+			{ name: 'Tasks', url: '/tasks' },
+			{ name: 'Login', url: 'login' },
+			{ name: 'Register', url: '/register' },
+			{ name: 'NewTask', url: '/tasks/new' },
+			{ name: 'Logout', url: '/logout' }
+		];
 
 		return (
 			<div className="container-sm">
+				<Header links={links} />
 				<form onSubmit={this.handleSubmit}>
 					{this.renderInput('userName', 'Benutzer', true)}
 					{this.renderInput('password', 'Passwort', false, 'password')}

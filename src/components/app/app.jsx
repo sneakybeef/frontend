@@ -1,6 +1,5 @@
 import React from 'react';
 import * as Axios from 'axios';
-import Cookies from 'universal-cookie';
 
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import AddTask from '../addTask/addTask';
 import Login from '../apps/login';
 import Register from '../../components/register/register';
 import Start from '../apps/start';
+import Logout from '../../components/logout';
 
 import env from './../../env.json';
 
@@ -18,8 +18,7 @@ class App extends React.Component {
 		this.state = {
 			refresh: false,
 			userName: '',
-			email: '',
-			token: null
+			email: ''
 		};
 	}
 	routing = (pathname, token) => {
@@ -35,9 +34,8 @@ class App extends React.Component {
 			data: { userName, password },
 			withCredentials: true
 		}).then(
-			(resp) => {
-				const { data: { token } } = resp;
-				this.setState({ token, userName, password });
+			() => {
+				this.setState({ userName, password });
 
 				return true;
 			},
@@ -48,10 +46,24 @@ class App extends React.Component {
 		return response;
 	};
 
-	handleRefresh() {
-		const notRefresh = !this.state.refresh;
-		this.setState({ refresh: true });
-	}
+	handleLogout = async (userName, password) => {
+		const response = await Axios({
+			method: 'post',
+			url: `${env.BACKEND}/user/logout`,
+			withCredentials: true
+		}).then(
+			(resp) => {
+				const { data: { token } } = resp;
+				this.setState({ token, userName: '', password: '', email: '' });
+
+				return true;
+			},
+			(error) => {
+				return false;
+			}
+		);
+		return response;
+	};
 
 	render = () => {
 		return (
@@ -59,24 +71,16 @@ class App extends React.Component {
 				<Route exact path="/" component={Start} />
 				<Route
 					exact
+					path="/logout"
+					render={(props) => <Logout {...props} onLogout={this.handleLogout.bind(this)} />}
+				/>
+				<Route
+					exact
 					path="/login"
-					render={(props) => (
-						<Login
-							{...props}
-							refresh={this.handleRefresh.bind(this)}
-							onLogin={this.handleLogin.bind(this)}
-						/>
-					)}
+					render={(props) => <Login {...props} onLogin={this.handleLogin.bind(this)} />}
 				/>
 				{this.state.token ? (
-					<Route
-						exact
-						path="/tasks"
-						component={() => <Tasks token={this.state.token} />}
-						// render={(props) => (
-						// 	<Tasks {...props} refresh={this.handleRefresh.bind(this)} token={this.state.token} />
-						// )}
-					/>
+					<Route exact path="/tasks" component={() => <Tasks token={this.state.token} />} />
 				) : (
 					<Route exact path="/tasks" component={Tasks} />
 				)}

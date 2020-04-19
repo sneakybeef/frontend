@@ -3,6 +3,7 @@ import Form from '../form/form';
 import Joi from 'joi-browser';
 import env from '../../env.json';
 import Axios from 'axios';
+import Header from './../header/header';
 class Register extends Form {
 	state = {
 		data: { email: '', userName: '', password: '' },
@@ -35,8 +36,17 @@ class Register extends Form {
 		);
 	};
 	render() {
+		const links = [
+			{ name: 'Home', url: '/' },
+			{ name: 'Tasks', url: '/tasks' },
+			{ name: 'Login', url: 'login' },
+			{ name: 'Register', url: '/register' },
+			{ name: 'NewTask', url: '/tasks/new' },
+			{ name: 'Logout', url: '/logout' }
+		];
 		return (
 			<div className="container-sm">
+				<Header links={links} />
 				<form onSubmit={this.handleSubmit}>
 					{this.renderInput('email', 'Email', true, 'email')}
 					{this.renderInput('userName', 'Name', false, 'text')}

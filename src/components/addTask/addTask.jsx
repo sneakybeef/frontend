@@ -4,7 +4,7 @@ import Form from '../form/form';
 import env from '../../env.json';
 import { tasks } from '../../data/data.json';
 import Axios from 'axios';
-
+import Header from '../header/header';
 class AddTask extends Form {
 	state = {
 		update: false,
@@ -14,14 +14,17 @@ class AddTask extends Form {
 	};
 
 	schema = {
-		name: Joi.string().required().label('Benutzer'),
-		description: Joi.string().required().label('Passwort'),
-		urgency: Joi.string().required().label('Wichtigkeit')
+		name: Joi.string().required().label('Name').error(() => {
+			return {
+				message: 'Name darf nicht leer sein'
+			};
+		}),
+		description: Joi.label('Beschreibung'),
+		urgency: Joi.label('Wichtigkeit')
 	};
 
 	doSubmit = () => {
 		const { name, description, urgency } = this.state.data;
-
 		const object = {
 			name,
 			description,
@@ -46,8 +49,17 @@ class AddTask extends Form {
 	};
 
 	render() {
+		const links = [
+			{ name: 'Home', url: '/' },
+			{ name: 'Tasks', url: '/tasks' },
+			{ name: 'Login', url: 'login' },
+			{ name: 'Register', url: '/register' },
+			{ name: 'NewTask', url: '/tasks/new' },
+			{ name: 'Logout', url: '/logout' }
+		];
 		return (
 			<div className="container-sm">
+				<Header links={links} />
 				<h1>New Task</h1>
 				<form onSubmit={this.handleSubmit}>
 					{this.renderInput('name', 'Name', true)}

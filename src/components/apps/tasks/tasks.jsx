@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import env from '../../../env.json';
 import Axios from 'axios';
-import Cookies from 'universal-cookie';
-import { loadPartialConfig } from '@babel/core';
-
-const cookies = new Cookies();
+import Header from './../../header/header';
 
 class Tasks extends Component {
 	state = {
@@ -71,6 +68,15 @@ class Tasks extends Component {
 	};
 
 	render() {
+		const links = [
+			{ name: 'Home', url: '/' },
+			{ name: 'Tasks', url: '/tasks' },
+			{ name: 'Login', url: 'login' },
+			{ name: 'Register', url: '/register' },
+			{ name: 'NewTask', url: '/tasks/new' },
+			{ name: 'Logout', url: '/logout' }
+		];
+
 		Axios({
 			method: 'get',
 			url: `${env.BACKEND}/tasks`,
@@ -89,9 +95,9 @@ class Tasks extends Component {
 
 		return (
 			<div>
-				<Link to="/tasks/new" className="btn btn-primary">
-					New Task
-				</Link>
+				<div className="container-sm">
+					<Header links={links} />
+				</div>
 				<table className="table">
 					<thead>
 						<tr key="wtf">
@@ -117,6 +123,9 @@ class Tasks extends Component {
 						))}
 					</tbody>
 				</table>
+				{/* <Link to="/tasks/new" className="btn btn-primary">
+					New Task
+				</Link> */}
 			</div>
 		);
 	}
